@@ -8,14 +8,10 @@ impl<'a, T> Iterator for MyIteratorWrapper<'a, T> {
 
     fn next(&mut self) -> Option<Self::Item> {
 
-        if self.slice.is_empty() {
-            return None;
-        }
+        let (element, rest) = self.slice.split_first()?;
+        self.slice = rest;
 
-        let element = self.slice.get(0);
-        self.slice = &self.slice[1..];
-
-        return Some(element.unwrap());
+        return Some(element);
     }
     
 }
@@ -33,8 +29,8 @@ mod tests {
         };
 
         for (index, elem) in wrapper.enumerate() {
+            println!("Elem: {}", *elem);
             assert_eq!(*elem, collection[index]);
-
         }
     }
 }
